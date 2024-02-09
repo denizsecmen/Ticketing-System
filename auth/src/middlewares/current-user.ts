@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { StringSchemaDefinition } from 'mongoose';
 
 interface UserPayload {
   id: string;
   email: string;
 }
+
 declare global {
   namespace Express {
     interface Request {
@@ -13,6 +13,7 @@ declare global {
     }
   }
 }
+
 export const currentUser = (
   req: Request,
   res: Response,
@@ -21,6 +22,7 @@ export const currentUser = (
   if (!req.session?.jwt) {
     return next();
   }
+
   try {
     const payload = jwt.verify(
       req.session.jwt,
@@ -28,5 +30,6 @@ export const currentUser = (
     ) as UserPayload;
     req.currentUser = payload;
   } catch (err) {}
+
   next();
 };
